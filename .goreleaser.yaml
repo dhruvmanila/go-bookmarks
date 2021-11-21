@@ -1,0 +1,45 @@
+---
+before:
+  hooks:
+    - make tidy
+
+builds:
+  - main: ./cmd/bookmarks/
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    mod_timestamp: "{{.CommitTimestamp}}"
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+      - -X main.version={{ .Version }}
+      - -X main.commit={{ .ShortCommit }}
+
+archives:
+  - name_template: "{{ .ProjectName }}-{{ .Version }}-{{ .Os }}-{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+    wrap_in_directory: true
+    files:
+      - LICENSE
+      - README.md
+
+checksum:
+  name_template: "{{ .ProjectName }}-{{ .Version }}-checksums.txt"
+
+snapshot:
+  name_template: "snapshot-{{ .Commit }}"
+
+release:
+  draft: true
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - Merge pull request
+      - Merge branch
