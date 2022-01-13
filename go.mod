@@ -1,4 +1,4 @@
-module github.com/dhruvmanila/bookmarks
+module github.com/dhruvmanila/go-bookmarks
 
 go 1.17
 

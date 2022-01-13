@@ -9,7 +9,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/dhruvmanila/bookmarks/pkg/browser"
+	"github.com/dhruvmanila/go-bookmarks/pkg/browser"
 	"golang.org/x/term"
 )
 
