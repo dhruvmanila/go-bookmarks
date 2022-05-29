@@ -6,11 +6,10 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strings"
-	"unicode/utf8"
 
 	"github.com/dhruvmanila/go-bookmarks/pkg/browser"
-	"golang.org/x/term"
+	"github.com/dhruvmanila/go-bookmarks/pkg/ui"
+	webbrowser "github.com/pkg/browser"
 )
 
 var (
@@ -100,22 +99,25 @@ func main() {
 			log.Fatal(err)
 		}
 	default:
-		width, _, err := term.GetSize(0)
+		choices, err := ui.FindBookmarksMulti(browserName, bookmarks)
 		if err != nil {
 			log.Fatal(err)
 		}
-		width /= 2
-		for _, b := range bookmarks {
-			padding := ""
-			availableWidth := width - utf8.RuneCountInString(b.Path)
-			if availableWidth < 0 {
-				b.Path = b.Path[:width] + "..."
-			} else {
-				padding = strings.Repeat(" ", availableWidth)
+
+		for _, idx := range choices {
+			if err := openURL(bookmarks[idx].Url); err != nil {
+				log.Fatal(err)
 			}
-			fmt.Printf("%s%s\t\033[36m%s\033[0m\n", b.Path, padding, b.Url)
 		}
 	}
+}
+
+// openURL opens the given URL in the default browser.
+func openURL(url string) error {
+	if err := webbrowser.OpenURL(url); err != nil {
+		return fmt.Errorf("failed to open the URL (%s): %w", url, err)
+	}
+	return nil
 }
 
 const usage = `Usage: bookmarks [options]
