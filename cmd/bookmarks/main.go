@@ -14,8 +14,8 @@ import (
 )
 
 var (
-	version = "dev"
-	commit  = ""
+	Version   = "dev"
+	GitCommit = ""
 )
 
 // Command-line options
@@ -44,7 +44,7 @@ func main() {
 	log.SetPrefix("bookmarks: ")
 	log.SetFlags(0)
 
-	flag.Usage = func() { fmt.Fprintln(os.Stderr, usage) }
+	flag.Usage = func() { fmt.Fprint(os.Stderr, usage) }
 	flag.Parse()
 
 	switch {
@@ -52,7 +52,7 @@ func main() {
 		flag.Usage()
 		return
 	case showVersion:
-		fmt.Printf("bookmarks %s (%s)\n", version, commit)
+		fmt.Printf("bookmarks %s (%s)\n", Version, GitCommit)
 		return
 	}
 
